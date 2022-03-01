@@ -1,28 +1,30 @@
-[![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml) [![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml)
-# Проект Mesto фронтенд + бэкенд
+[![Tests for sprint 13](https://github.com/andrey-graf/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/andrey-graf/express-mesto-gha/actions/workflows/tests-13-sprint.yml)
 
+# **Проект: Бэкенд - Место**
 
+## **Описание проекта:**
+---
+Проектная работа _"Бэкенд - Место"_ это разработка сервера для фронтенд _"Место"_.
 
-## Настройка бейджей статуса тестов
-Перед началом работы над проектом рекомендуется исправить бейджи, отражающие статус прохождения тестов.
-Для этого замените разметку бейджей на следующий фрагмент, подставив вместо `${имя_пользователя}` и `${имя_репозитория}` соответствующие значения.
+В рамках обучения _"Веб-разработчик"_ , курс _"Бэкенд"_ _"13 - 14 спринт"_ .
 
-```
-[![Tests for sprint 13](https://github.com/${имя_пользователя}/${имя репозитория}/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/${имя_пользователя}/${имя репозитория}/actions/workflows/tests-13-sprint.yml) 
+### **Функционал**
+---
 
-[![Tests for sprint 14](https://github.com/${имя_пользователя}/${имя репозитория}/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/${имя_пользователя}/${имя репозитория}/actions/workflows/tests-14-sprint.yml)
-```
+* Регистрация и авторизации пользователя.
+* Редактировать профиль.
+* Добовлять и удалять фотографии.
+* Ставит лайк фотографии.
 
+#### **Применяемые технологии:**
+---
+* Методология БЭМ.
+* JavaScript.
+* Node.js.
+* Express.js.
+* MongoDB.
 
-## Директории
+---
+**Ссылка на проект**
 
-`/routes` — папка с файлами роутера  
-`/controllers` — папка с файлами контроллеров пользователя и карточки   
-`/models` — папка с файлами описания схем пользователя и карточки  
-  
-Остальные директории вспомогательные, создаются при необходимости разработчиком
-
-## Запуск проекта
-
-`npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
+* [Место](https://andrey-graf.github.io/express-mesto-gha/)
