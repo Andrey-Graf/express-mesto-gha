@@ -11,7 +11,7 @@ module.exports.getUsers = (req, res) => {
     })
     .catch((err) => res.status(500).send({ message: `Внутренняя ошибка сервера: ${err}` }))
 };
-
+//Поиск пользоателя по Id
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
     .orFail(new Error('NotFound'))
@@ -27,7 +27,7 @@ module.exports.getUserById = (req, res) => {
       res.status(500).send({ message: `Ошибка сервера: ${err}` });
     })
 };
-
+// Создать пользователя.
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
@@ -40,7 +40,7 @@ module.exports.createUser = (req, res) => {
       res.status(500).send({ message: `Ошибка сервера: ${err}` });
     })
 };
-
+// Обновить информацию создоного пользователя.
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
@@ -61,7 +61,7 @@ module.exports.updateUser = (req, res) => {
       res.status(500).send({ message: `Ошибка сервера: ${err}` });
     })
 };
-
+// Обновить аватар пользователя.
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(

@@ -7,7 +7,7 @@ module.exports.getCards = (req, res) => {
       res.status(500).send({ message: `Ошибка сервера: ${err}` })
     })
 }
-
+// Создать карточку.
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   const  owner = req.user._id;
@@ -21,7 +21,7 @@ module.exports.createCard = (req, res) => {
       res.status(500).send({ message: `Ошибка сервера: ${err}` });
     })
 }
-
+// Удолить карточку( пользователь может удолить карточку только ту которую создал ).
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
   Card.findById(cardId)
@@ -45,7 +45,7 @@ module.exports.deleteCard = (req, res) => {
       res.status(500).send({ message: `Ошибка сервера: ${err}` });
     })
 }
-
+// Поставить like понравившейся карточке.
 module.exports.likeCard = (req, res) => {
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
@@ -66,7 +66,7 @@ module.exports.likeCard = (req, res) => {
       res.status(500).send({ message: `Ошибка сервера: ${err}` });
     })
 }
-
+// Отменить like понравившейся карточке.
 module.exports.dislikeCard = (req, res) => {
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
