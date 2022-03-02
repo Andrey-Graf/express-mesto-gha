@@ -2,13 +2,7 @@ const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((users) => {
-      if (users.length === 0) {
-        res.status(404).send({ message: 'Пользователь не найден' });
-        return;
-      }
-      res.status(200).send(users);
-    })
+    .then((users) => res.status(200).send(users))
     .catch((err) => res.status(500).send({ message: `Внутренняя ошибка сервера: ${err}` }))
 };
 //Поиск пользоателя по Id

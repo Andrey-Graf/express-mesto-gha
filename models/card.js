@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const user = require('./user');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -29,7 +28,7 @@ const cardSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  }
+  },
 });
 
 module.exports = mongoose.model('card', cardSchema);
