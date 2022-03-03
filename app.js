@@ -12,9 +12,6 @@ const app = express();
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false,
-  // В 'Mongoose' 6 версии "useCreateIndex: true", "useFindAndModify: false" больше не поддерживаються.
   useUnifiedTopology: true
 });
 
