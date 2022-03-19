@@ -9,9 +9,11 @@ module.exports.getCards = (req, res) => {
 };
 // Создать карточку.
 module.exports.createCard = (req, res) => {
-  const { name, link } = req.body;
-  const owner = req.user._id;
-  Card.create({ name, link, owner })
+  Card.create({
+    name: req.body.name,
+    link: req.body.link,
+    owner: req.user._id,
+  })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -28,7 +30,7 @@ module.exports.deleteCard = (req, res, next) => {
     .orFail(new Error('NotFound'))
     .then((card) => {
       if (req.user._id !== card.owner.toString()) {
-        next(res.status(404).send({ message: 'Нельзя удалить чужую карточку' }));
+        next(res.status(403).send({ message: 'Нельзя удалить чужую карточку' }));
       } else {
         Card.deleteOne(card)
           .then((deletedCard) => res.status(200).send({ message: `Карточка ${deletedCard.id} успешно удалена` }));

@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
@@ -20,16 +22,33 @@ module.exports.getUserById = (req, res, next) => {
     });
 };
 // Создать пользователя.
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then((user) => res.status(200).send({ data: user.toJSON() }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: `Ошибка валидации: ${err}` });
-        return;
+module.exports.createUser = (req, res, next) => {
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+  User.findOne({ email })
+    .then((userEmail) => {
+      if (userEmail) {
+        next(res.status(409).send({ message: 'Пользователь с таким email уже существует' }));
+      } else {
+        bcrypt.hash(password, 10)
+          .then((hash) => User.create({
+            name,
+            about,
+            avatar,
+            email,
+            password: hash,
+          }))
+          .then((user) => res.status(200).send(user.toJSON()))
+          .catch((err) => {
+            if (err.name === 'ValidationError') {
+              next(res.status(400).send({ message: `Ошибка валидации: ${err}` }));
+            } else if (err.name === 'MongoError' && err.code === 11000) {
+              next(res.status(409).send({ message: `Пользователь с таким email уже существует: ${err}` }));
+            }
+            res.status(500).send({ message: `Ошибка сервера: ${err}` });
+          });
       }
-      res.status(500).send({ message: `Ошибка сервера: ${err}` });
     });
 };
 // Обновить информацию создоного пользователя.
@@ -64,6 +83,39 @@ module.exports.updateAvatar = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: `Переданы некорректные данные: ${err}` });
         return;
+      }
+      res.status(500).send({ message: `Ошибка сервера: ${err}` });
+    });
+};
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        sameSite: true,
+      }).send({ token });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(401).send({ message: `Необходимо авторизоваться: ${err}` });
+        return;
+      }
+      res.status(500).send({ message: `Ошибка сервера: ${err}` });
+    });
+};
+
+module.exports.getCurrentUser = (req, res, next) => {
+  User.findById(req.user._id)
+    .orFail(new Error('NotFound'))
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(res.status(400).send({ message: `Ошибка авторизации: ${err}` }));
+      } else if (err.message === 'NotFound') {
+        next(res.status(404).send({ message: `Пользователь c таким "id" несуществует: ${err}` }));
       }
       res.status(500).send({ message: `Ошибка сервера: ${err}` });
     });
