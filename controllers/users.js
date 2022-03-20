@@ -7,6 +7,20 @@ module.exports.getUsers = (req, res) => {
     .then((users) => res.status(200).send(users))
     .catch((err) => res.status(500).send({ message: `Внутренняя ошибка сервера: ${err}` }));
 };
+
+module.exports.getCurrentUser = (req, res, next) => {
+  User.findById(req.user._id)
+    .orFail(new Error('NotFound'))
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(res.status(400).send({ message: `Ошибка авторизации: ${err}` }));
+      } else if (err.message === 'NotFound') {
+        next(res.status(404).send({ message: `Пользователь c таким "id" несуществует: ${err}` }));
+      }
+      res.status(500).send({ message: `Ошибка сервера: ${err}` });
+    });
+};
 // Поиск пользоателя по Id
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
@@ -102,20 +116,6 @@ module.exports.login = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(401).send({ message: `Необходимо авторизоваться: ${err}` });
         return;
-      }
-      res.status(500).send({ message: `Ошибка сервера: ${err}` });
-    });
-};
-
-module.exports.getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
-    .orFail(new Error('NotFound'))
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(res.status(400).send({ message: `Ошибка авторизации: ${err}` }));
-      } else if (err.message === 'NotFound') {
-        next(res.status(404).send({ message: `Пользователь c таким "id" несуществует: ${err}` }));
       }
       res.status(500).send({ message: `Ошибка сервера: ${err}` });
     });

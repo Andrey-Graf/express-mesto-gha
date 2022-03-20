@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const cookieParser = require('cookie-parser');
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
@@ -20,6 +21,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.post('/signin', validateSignIn, login);
 app.post('/signup', validateSingUp, createUser);
