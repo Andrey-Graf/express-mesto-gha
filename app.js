@@ -10,6 +10,8 @@ const cardRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const { validateSignIn, validateSingUp } = require('./middlewares/validators');
+const errorHander = require('./middlewares/errorHander');
+const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -31,26 +33,11 @@ app.use(auth);
 app.use('/', userRouter);
 app.use('/', cardRouter);
 app.use('*', (req, res, next) => {
-  next(res.status(404).send({ message: 'Запршиваемый ресурс не найден' }));
+  next(new NotFoundError('Запршиваемый ресурс не найден'));
 });
 
 app.use(errors());
-
-app.use((err, req, res, next) => {
-  // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      // проверяем статус и выставляем сообщение в зависимости от него
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-  next();
-});
-
+app.use(errorHander);
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
